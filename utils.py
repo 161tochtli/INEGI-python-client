@@ -12,7 +12,7 @@ from functools import wraps
 import pandas as pd
 
 
-def download_all(first_call, outfile=None):
+def download_all(first_call, per=250, outfile=None):
 
     with TemporaryDirectory() as td:
         page=1
@@ -28,26 +28,26 @@ def download_all(first_call, outfile=None):
                 page += 1
                 print("[■", end="")
             while page > 1:
-                #time.sleep(1)
+                time.sleep(1)
 
                 print("■",end="")
-                result = result.next_page()
+                result = result.next_page(per)
                 if result.is_empty():
-                    #print("La última página estaba vacía")
                     print("]\nDescarga exitosa!")
                     break
                 result.to_csv(folder=td)
                 file_path = result.file_path
                 page += 1
         except requests.exceptions.RequestException as e:
-            print(f'An error occurred: {e}')
+            print(f"An error occurred on page {page}:\n{e}")
+
         except Exception as e:
-            print(f"Broad exception: {e}")
+            print(f"Broad exception on page {page}:\n{e}")
 
 
         files = [Path(td)/f for f in os.listdir(td)]
         files.sort(key=lambda f:int(f.stem.split("-")[-2]))
-
+        print(files)
         dfs = [pd.read_csv(f) for f in files]
 
         df = pd.concat(dfs,axis="rows")
@@ -66,8 +66,8 @@ def download_all(first_call, outfile=None):
             outfile = full_df_filename
         print(f"Total: {len(df)} registros")
         df.to_csv(outfile,index=False)
-    outfile = Path(outfile)
-    print(f"Archivo guardado en {outfile.resolve()}")
+
+    print(f"Archivo guardado en {Path(outfile).resolve()}")
 
 
 
@@ -179,11 +179,14 @@ class PaginatedResult(Result):
         # Assume page is controlled by registro_inicial and registro_final
         if per == 'default':
             per = self.params['registro_final'] - self.params['registro_inicial']
-        self.params['registro_inicial'] += per + 1
-        self.params['registro_final'] += per + 1
+        self.params['registro_inicial'] = self.params['registro_final'] + 1
+        self.params['registro_final'] = self.params['registro_inicial'] + per
         # Call the method to fetch the next page
         next_result = self.method(**self.params)
         return next_result
+
+    def get_all(self,per=250,outfile=None):
+        download_all(self,per,outfile)
 
     def __next__(self):
         self.next_page()
