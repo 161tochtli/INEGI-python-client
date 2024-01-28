@@ -12,7 +12,7 @@ from functools import wraps
 import pandas as pd
 
 
-def download_all(first_call, per=250, outfile=None):
+def download_all_to_csv(first_call, outfile=None, folder=None, per=250):
 
     with TemporaryDirectory() as td:
         page=1
@@ -23,7 +23,7 @@ def download_all(first_call, per=250, outfile=None):
             if result.is_empty():
                 print("No se encontraron resultados para esta consulta.")
             else:
-                result.to_csv(folder=td)
+                result.to_csv(folder=td,echo=False)
                 file_path = result.file_path
                 page += 1
                 print("[■", end="")
@@ -35,7 +35,7 @@ def download_all(first_call, per=250, outfile=None):
                 if result.is_empty():
                     print("]\nDescarga exitosa!")
                     break
-                result.to_csv(folder=td)
+                result.to_csv(folder=td, echo=False)
                 file_path = result.file_path
                 page += 1
         except requests.exceptions.RequestException as e:
@@ -47,7 +47,7 @@ def download_all(first_call, per=250, outfile=None):
 
         files = [Path(td)/f for f in os.listdir(td)]
         files.sort(key=lambda f:int(f.stem.split("-")[-2]))
-        print(files)
+
         dfs = [pd.read_csv(f) for f in files]
 
         df = pd.concat(dfs,axis="rows")
@@ -63,11 +63,16 @@ def download_all(first_call, per=250, outfile=None):
             full_df_filename = list(filter(lambda x: x[-1]==max_index,file_name_split))[0]
             full_df_filename[-2] = min_index
             full_df_filename = "-".join(full_df_filename)+".csv"
-            outfile = full_df_filename
+            folder = folder if folder else ''
+            outfile = Path(full_df_filename)
+            if folder:
+                outfile = Path(folder)/outfile
         print(f"Total: {len(df)} registros")
         df.to_csv(outfile,index=False)
 
-    print(f"Archivo guardado en {Path(outfile).resolve()}")
+    outfile = outfile.resolve()
+    print(f"Archivo guardado en {outfile}")
+    return outfile
 
 
 
@@ -145,17 +150,21 @@ class Result:
         file_path = '-'.join([timestamp, numpag_query]) + '.csv'
         return file_path
 
-    def to_csv(self, file_path=None, folder=None, **kwargs):
-        df = self.to_df()
-        if not file_path:
-            file_path = self.make_file_path()
+    def to_csv(self, outfile=None, folder=None, echo=True, **kwargs):
+        df = self.to_pandas()
+        if not outfile:
+            outfile = self.make_file_path()
             if folder:
-                file_path = Path(folder)/file_path
-        self.file_path = file_path
-        df.to_csv(file_path, index=False, **kwargs)
+                outfile = Path(folder)/outfile
+        self.file_path = outfile
+        df.to_csv(outfile, index=False, **kwargs)
+        outfile = Path(outfile).resolve()
+        if echo:
+            print(f"Archivo guardado en {outfile}")
+        return outfile
 
 
-    def to_df(self, **kwargs):
+    def to_pandas(self, **kwargs):
         df = pd.DataFrame(self.data, **kwargs)
         return df
 
@@ -185,8 +194,14 @@ class PaginatedResult(Result):
         next_result = self.method(**self.params)
         return next_result
 
-    def get_all(self,per=250,outfile=None):
-        download_all(self,per,outfile)
+    def to_csv(self, outfile=None, folder=None, download_all=False, **kwargs):
+        if download_all:
+            outfile = download_all_to_csv(self, outfile, **kwargs)
+        else:
+            outfile = super().to_csv(outfile, folder, **kwargs)
+
+        return outfile
+
 
     def __next__(self):
         self.next_page()
