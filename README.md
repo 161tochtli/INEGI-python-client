@@ -14,5 +14,5 @@ En el archivo "ejemplo.py" dentro de la carpeta "ejemplos" puedes encontrar un t
 - BuscarAreaActEstr
 - Cuantificar
 
-Con los parámetros descritos en el [sitio del INEGI](https://www.inegi.org.mx/servicios/api_denue.html#metAEAGEstr).
-Una explicación similar adaptada se encuentra en el archivo "denue.py".
+Con los parámetros descritos en el [sitio del INEGI](https://www.inegi.org.mx/servicios/api_denue.html#metAEAGEstr) (pestaña Guía para desarrolladores).
+También puedes revisar esta información en el archivo "denue.py".
