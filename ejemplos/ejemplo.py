@@ -29,6 +29,6 @@ consulta.to_csv(outfile="data_completa.csv", download_all=True)
 
 # Además, si quieres que se genere un nombre de archivo por ti, puedes solo especificar el nombre de la carpeta en
 # donde quieres guardar los datos, y la ruta al archivo se guardará en outfile.
-outfile = consulta.to_csv(folder="data/")#, download_all=True)
+outfile = consulta.to_csv(folder="../data/")#, download_all=True)
 df = pd.read_csv(outfile) # Cargamos los datos a un dataframe
 # Nota: Se recomienda utilizar la descarga simple para probar las consultas antes de realizar una descarga completa.
