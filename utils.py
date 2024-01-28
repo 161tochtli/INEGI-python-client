@@ -12,28 +12,29 @@ from functools import wraps
 import pandas as pd
 
 
-def download_all(first_call, outfile):
-    outfile = Path(outfile)
+def download_all(first_call, outfile=None):
+
     with TemporaryDirectory() as td:
         page=1
         try:
-            print(f"Descargando página {page}")
+            print(f"Descargando, por favor espere..")
             result = first_call
 
             if result.is_empty():
-                print("La primera página estaba vacía")
-                print("Se procesaron todas las páginas")
+                print("No se encontraron resultados para esta consulta.")
             else:
                 result.to_csv(folder=td)
                 file_path = result.file_path
                 page += 1
+                print("[■", end="")
             while page > 1:
                 #time.sleep(1)
-                print(f"Descargando página {page}")
+
+                print("■",end="")
                 result = result.next_page()
                 if result.is_empty():
-                    print("La última página estaba vacía")
-                    print("Se procesaron todas las páginas")
+                    #print("La última página estaba vacía")
+                    print("]\nDescarga exitosa!")
                     break
                 result.to_csv(folder=td)
                 file_path = result.file_path
@@ -63,7 +64,12 @@ def download_all(first_call, outfile):
             full_df_filename[-2] = min_index
             full_df_filename = "-".join(full_df_filename)+".csv"
             outfile = full_df_filename
+        print(f"Total: {len(df)} registros")
         df.to_csv(outfile,index=False)
+    outfile = Path(outfile)
+    print(f"Archivo guardado en {outfile.resolve()}")
+
+
 
 def inspect_response(func):
     @wraps(func)
@@ -95,7 +101,7 @@ def make_request(base_url,endpoint,params,token, **kwargs):
     # Realizando la solicitud a la API
     response = None
     try:
-        print(url)
+        #print(f"Requesting {url}")
         response = requests.get(url, **kwargs)
         response.raise_for_status()  # Raise HTTPError for bad responses (4xx and 5xx)
     except requests.exceptions.Timeout as e:
@@ -135,8 +141,8 @@ class Result:
         url = "/".join(url.split("/")[:-1])
         # make filepath
         query = url.split("consulta/")[1].split("/")
-        nopag_query = "-".join(query[:-2])
-        file_path = '-'.join([timestamp, nopag_query]) + '.csv'
+        numpag_query = "-".join(query[:-2])
+        file_path = '-'.join([timestamp, numpag_query]) + '.csv'
         return file_path
 
     def to_csv(self, file_path=None, folder=None, **kwargs):
