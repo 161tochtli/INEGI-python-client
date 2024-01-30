@@ -70,7 +70,7 @@ def download_all_to_csv(first_call, outfile=None, folder=None, per=250):
         print(f"Total: {len(df)} registros")
         df.to_csv(outfile,index=False)
 
-    outfile = outfile.resolve()
+    outfile = Path(outfile).resolve()
     print(f"Archivo guardado en {outfile}")
     return outfile
 
