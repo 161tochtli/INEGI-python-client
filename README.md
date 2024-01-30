@@ -22,9 +22,11 @@ Puedes utilizar cualquiera de las consultas de los [catálogos disponibles](#ine
 
 
 <a id="inegi.catalogos_disponibles"></a>
-## Catálogos disponibles
+### Catálogos disponibles
 
-- [DENUE](###DENUE:-Directorio-Estadístico-Nacional-de-Unidades-Económicas)
+[DENUE](###DENUE:-Directorio-Estadístico-Nacional-de-Unidades-Económicas)
+
+---
 
 ### DENUE: Directorio Estadístico Nacional de Unidades Económicas
 Ofrece los datos de identificación, ubicación, actividad económica y tamaño de más de 5 millones de unidades económicas activas en el territorio nacional.
@@ -42,7 +44,7 @@ Ofrece los datos de identificación, ubicación, actividad económica y tamaño 
 
 <a id=".denue.DenueInegiClient"></a>
 
-## DenueInegiClient
+### DenueInegiClient
 
 ```python
 class DenueInegiClient()
