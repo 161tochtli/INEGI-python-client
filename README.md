@@ -24,10 +24,11 @@ Puedes utilizar cualquiera de las consultas de los [catálogos disponibles](#ine
 <a id="inegi.catalogos_disponibles"></a>
 ### Catálogos disponibles
 
-[DENUE](###DENUE:-Directorio-Estadístico-Nacional-de-Unidades-Económicas)
+[DENUE](#denue)
 
 ---
 
+<a id="denue"></a>
 ### DENUE: Directorio Estadístico Nacional de Unidades Económicas
 Ofrece los datos de identificación, ubicación, actividad económica y tamaño de más de 5 millones de unidades económicas activas en el territorio nacional.
 
