@@ -1,7 +1,7 @@
 # Descarga datos del INEGI utilizando Python
 
-En el archivo **_ejemplo.py_** dentro de la carpeta **_ejemplos_** puedes encontrar un tutorial básico sobre el uso  de este este repositorio.
-La mayor parte de los usuarios encontrarán en este archivo el código que necesitan para guiarse en la descarga de los datos.
+En el archivo [**_ejemplo.py_**](ejemplos/ejemplo) dentro de la carpeta **_ejemplos_** puedes encontrar un tutorial básico sobre el uso  de este este repositorio.
+La mayor parte de los usuarios encontrarán en ese archivo el código que necesitan para guiarse en la descarga de los datos.
 
 
 El siguinte código ejemplifica como descargar todos los datos para una consulta de tipo "BuscarEntidad":
