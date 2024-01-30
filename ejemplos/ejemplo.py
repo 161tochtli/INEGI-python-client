@@ -23,7 +23,7 @@ consulta = denue_inegi.BuscarEntidad(condicion="Taller mecanico", registro_inici
 df = consulta.to_pandas()
 # 2. Como un archivo CSV (ventaja: Puedes descargar más datos y luego cargarlos a un dataframe)
 # Descarga simple (solo los datos entre "registro_inicial" y "registro_final")
-consulta.to_csv(outfile="mi_consulta.csv")
+consulta.to_csv(outfile="data_intervalo.csv")
 # Descarga completa (todos los datos disponibles)
 consulta.to_csv(outfile="data_completa.csv", download_all=True)
 
