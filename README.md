@@ -43,7 +43,7 @@ Ofrece los datos de identificación, ubicación, actividad económica y tamaño 
 
 [Más información](https://www.inegi.org.mx/servicios/api_denue.html) (Pestaña "Guía para desarrolladores")
 
-<a id=".denue.DenueInegiClient"></a>
+<a id="denue.DenueInegiClient"></a>
 
 ### DenueInegiClient
 
